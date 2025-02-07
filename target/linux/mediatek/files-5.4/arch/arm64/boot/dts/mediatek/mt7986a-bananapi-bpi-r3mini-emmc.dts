@@ -31,12 +31,24 @@
 			label = "r3mini:green";
 			gpios = <&pio 19 GPIO_ACTIVE_HIGH>;
 		};
+
+		led-1 {
+			label = "r3mini:blue1";
+			gpios = <&pio 1 GPIO_ACTIVE_HIGH>;
+			default-state = "on";
+		};
+
+		led-2 {
+			label = "r3mini:blue2";
+			gpios = <&pio 2 GPIO_ACTIVE_HIGH>;
+			default-state = "on";
+		};
 	};
 
 	fan: pwm-fan {
 		compatible = "pwm-fan";
 		#cooling-cells = <2>;
-		cooling-levels = <255 128 80 0>;
+		cooling-levels = <220 160 80 40>;
 		pwms = <&pwm 0 10000 0>;
 		status = "okay";
 	};
@@ -125,25 +137,25 @@
 &cpu_thermal {
 	trips {
 		cpu_trip_critical: critical {
-			temperature = <85000>;
+			temperature = <95000>;
 			hysteresis = <2000>;
 			type = "critical";
 		};
 
 		cpu_trip_hot: hot {
-			temperature = <65000>;
+			temperature = <40000>;
 			hysteresis = <2000>;
 			type = "hot";
 		};
 
 		cpu_trip_active: active {
-			temperature = <55000>;
+			temperature = <35000>;
 			hysteresis = <2000>;
 			type = "active";
 		};
 
 		cpu_trip_passive: passive {
-			temperature = <45000>;
+			temperature = <20000>;
 			hysteresis = <2000>;
 			type = "passive";
 		};
@@ -177,6 +189,7 @@
 	status = "okay";
 
 	gmac0: mac@0 {
+		
 		compatible = "mediatek,eth-mac";
 		reg = <0>;
 		phy-mode = "2500base-x";
@@ -189,6 +202,7 @@
 	};
 
 	gmac1: mac@1 {
+		label = "wan";
 		compatible = "mediatek,eth-mac";
 		reg = <1>;
 		phy-mode = "2500base-x";
@@ -233,9 +247,9 @@
 };
 
 &hnat {
-	mtketh-wan = "eth1";
+	mtketh-wan = "wan";
 	mtketh-lan = "eth0";
-	ext-devices-prefix = "usb", "wwan","rmnet","eth2","eth3","eth4","eth5";
+	mtketh-ppd = "wan";
 	mtketh-max-gmac = <2>;
 	status = "okay";
 };
@@ -308,7 +322,6 @@
 */
 
 &pio {
-
 	/* GPIO 11 NGFF_GNSS_OFF. output-high: enable, output-low: disable */
 	gnss_off {
 		gpio-hog;
@@ -391,6 +404,8 @@
 		};
 	};
 
+	 
+
 	wf_2g_5g_pins: wf_2g_5g-pins {
 		mux {
 			function = "wifi";
@@ -424,4 +439,9 @@
 			drive-strength = <MTK_DRIVE_4mA>;
 		};
 	};
+};
+
+&xhci {
+	  
+	status = "okay";
 };
